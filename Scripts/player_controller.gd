@@ -7,4 +7,4 @@ func update():
 	thrust = move_input.length()
 	move_dir = Vector3(move_input.x, 0.0, move_input.y).normalized()
 	aim_dir = Vector3(aim_input.x, 0.0, aim_input.y).normalized()
-	print("balls")
+	trigger = Input.is_action_pressed("fire_weapon")

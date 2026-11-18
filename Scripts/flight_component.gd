@@ -2,7 +2,7 @@ class_name FlightComponent extends Node
 
 @export var ship: Ship
 @export var thruster_speed: float = 20.0
-@export var turn_speed: float = 2.0
+@export var turn_speed: float = 3.0
 @export var acceleration: float = 20.0
 
 func turn_to(dir: Vector3, delta: float):

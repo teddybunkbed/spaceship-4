@@ -1,40 +1,17 @@
 [gd_scene format=3 uid="uid://dsk7aaqe6o7w4"]
 
-[ext_resource type="Script" uid="uid://bcm7ycbo0202k" path="res://new_ship.gd" id="1_8uh7m"]
-[ext_resource type="Script" uid="uid://07uyd3fkyngb" path="res://flight_component.gd" id="3_6uqi0"]
-[ext_resource type="Script" uid="uid://ct1oeau4ft7y8" path="res://player_controller.gd" id="3_vbegm"]
-[ext_resource type="Script" uid="uid://bpr53p0icpt7g" path="res://normal_state.gd" id="5_g14j6"]
-[ext_resource type="Script" uid="uid://c5oqevo1uuldt" path="res://state_machine.gd" id="5_vbegm"]
-[ext_resource type="Script" uid="uid://7md8daph5lvt" path="res://strafe_state.gd" id="7_vbegm"]
+[ext_resource type="Script" uid="uid://bcm7ycbo0202k" path="res://Scripts/new_ship.gd" id="1_i3aeo"]
+[ext_resource type="Script" uid="uid://ct1oeau4ft7y8" path="res://Scripts/player_controller.gd" id="2_5wyu1"]
+[ext_resource type="Script" uid="uid://07uyd3fkyngb" path="res://Scripts/flight_component.gd" id="3_5wyu1"]
+[ext_resource type="Script" uid="uid://cpogc18s1it0f" path="res://Scripts/weapon_component.gd" id="3_35xla"]
+[ext_resource type="Script" uid="uid://c5oqevo1uuldt" path="res://Scripts/state_machine.gd" id="5_5wyu1"]
+[ext_resource type="Script" uid="uid://bpr53p0icpt7g" path="res://Scripts/normal_state.gd" id="5_iaow0"]
+[ext_resource type="Script" uid="uid://7md8daph5lvt" path="res://Scripts/strafe_state.gd" id="6_qpfo2"]
 
 [sub_resource type="Environment" id="Environment_ehkex"]
 background_mode = 1
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
-
-[sub_resource type="GDScript" id="GDScript_g14j6"]
-script/source = "extends Node2D
-
-@export var camera: Camera3D
-@export var player: CharacterBody3D
-
-func _process(delta: float) -> void:
-	queue_redraw()
-
-func _draw() -> void:
-	var from: Vector2 = camera.unproject_position(player.global_position)
-	var to: Vector2 = camera.unproject_position(player.global_position + player.move_dir * 2.0)
-	draw_line(from, to, Color.RED)
-	
-	to = camera.unproject_position(player.global_position + player.aim_dir * 2.0)
-	draw_line(from, to, Color.BLUE)
-	
-	to = camera.unproject_position(player.global_position + player.thrust_dir * 2.0)
-	draw_line(from, to, Color.PURPLE)
-	
-	to = camera.unproject_position(player.global_position + player.facing_dir * 2.0)
-	draw_line(from, to, Color.GREEN)
-"
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_xersf"]
 
@@ -51,16 +28,8 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1
 projection = 1
 size = 64.0
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=602010554]
-visible = false
-
-[node name="Node2D" type="Node2D" parent="CanvasLayer" unique_id=1316469039 node_paths=PackedStringArray("camera", "player")]
-script = SubResource("GDScript_g14j6")
-camera = NodePath("../../Camera3D")
-player = NodePath("../../PlayerShip")
-
 [node name="PlayerShip" type="CharacterBody3D" parent="." unique_id=1460826047 node_paths=PackedStringArray("model", "controller", "flight_component", "state_machine")]
-script = ExtResource("1_8uh7m")
+script = ExtResource("1_i3aeo")
 model = NodePath("Model")
 controller = NodePath("PlayerController")
 flight_component = NodePath("FlightComponent")
@@ -76,24 +45,28 @@ transform = Transform3D(-1, -8.742278e-08, -3.821371e-15, 0, -4.371139e-08, 1, -
 mesh = SubResource("PrismMesh_00tp4")
 
 [node name="PlayerController" type="Node" parent="PlayerShip" unique_id=1238525595]
-script = ExtResource("3_vbegm")
+script = ExtResource("2_5wyu1")
 
 [node name="FlightComponent" type="Node" parent="PlayerShip" unique_id=1465686275 node_paths=PackedStringArray("ship")]
-script = ExtResource("3_6uqi0")
+script = ExtResource("3_5wyu1")
+ship = NodePath("..")
+
+[node name="WeaponComponent" type="Node" parent="PlayerShip" unique_id=191703811 node_paths=PackedStringArray("ship")]
+script = ExtResource("3_35xla")
 ship = NodePath("..")
 
 [node name="StateMachine" type="Node" parent="PlayerShip" unique_id=1746983336 node_paths=PackedStringArray("default_state")]
-script = ExtResource("5_vbegm")
+script = ExtResource("5_5wyu1")
 default_state = NodePath("NormalState")
 
 [node name="NormalState" type="Node" parent="PlayerShip/StateMachine" unique_id=266910153 node_paths=PackedStringArray("strafe_state", "ship", "state_machine")]
-script = ExtResource("5_g14j6")
+script = ExtResource("5_iaow0")
 strafe_state = NodePath("../StrafeState")
 ship = NodePath("../..")
 state_machine = NodePath("..")
 
 [node name="StrafeState" type="Node" parent="PlayerShip/StateMachine" unique_id=2064424345 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
-script = ExtResource("7_vbegm")
+script = ExtResource("6_qpfo2")
 normal_state = NodePath("../NormalState")
 ship = NodePath("../..")
 state_machine = NodePath("..")
