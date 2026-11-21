@@ -8,3 +8,5 @@ func update():
 	move_dir = Vector3(move_input.x, 0.0, move_input.y).normalized()
 	aim_dir = Vector3(aim_input.x, 0.0, aim_input.y).normalized()
 	trigger = Input.is_action_pressed("fire_weapon")
+	boost = Input.is_action_pressed("boost")
+	dodge = Input.is_action_just_pressed("dodge")

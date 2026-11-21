@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://c5oqevo1uuldt" path="res://Scripts/state_machine.gd" id="5_5wyu1"]
 [ext_resource type="Script" uid="uid://bpr53p0icpt7g" path="res://Scripts/normal_state.gd" id="5_iaow0"]
 [ext_resource type="Script" uid="uid://7md8daph5lvt" path="res://Scripts/strafe_state.gd" id="6_qpfo2"]
+[ext_resource type="Script" uid="uid://bxrsayn1pb6q4" path="res://Scripts/boost_state.gd" id="8_0c07c"]
+[ext_resource type="Script" uid="uid://cvx34cff0q0" path="res://Scripts/dodge_state.gd" id="9_2cgwh"]
 
 [sub_resource type="Environment" id="Environment_ehkex"]
 background_mode = 1
@@ -59,15 +61,30 @@ ship = NodePath("..")
 script = ExtResource("5_5wyu1")
 default_state = NodePath("NormalState")
 
-[node name="NormalState" type="Node" parent="PlayerShip/StateMachine" unique_id=266910153 node_paths=PackedStringArray("strafe_state", "ship", "state_machine")]
+[node name="NormalState" type="Node" parent="PlayerShip/StateMachine" unique_id=266910153 node_paths=PackedStringArray("strafe_state", "boost_state", "dodge_state", "ship", "state_machine")]
 script = ExtResource("5_iaow0")
 strafe_state = NodePath("../StrafeState")
+boost_state = NodePath("../BoostState")
+dodge_state = NodePath("../DodgeState")
 ship = NodePath("../..")
 state_machine = NodePath("..")
 
-[node name="StrafeState" type="Node" parent="PlayerShip/StateMachine" unique_id=2064424345 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
+[node name="StrafeState" type="Node" parent="PlayerShip/StateMachine" unique_id=2064424345 node_paths=PackedStringArray("normal_state", "dodge_state", "ship", "state_machine")]
 script = ExtResource("6_qpfo2")
 normal_state = NodePath("../NormalState")
+dodge_state = NodePath("../DodgeState")
 ship = NodePath("../..")
 state_machine = NodePath("..")
 metadata/_custom_type_script = "uid://bu7pc5v4x1ct8"
+
+[node name="BoostState" type="Node" parent="PlayerShip/StateMachine" unique_id=1131922217 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
+script = ExtResource("8_0c07c")
+normal_state = NodePath("../NormalState")
+ship = NodePath("../..")
+state_machine = NodePath("..")
+
+[node name="DodgeState" type="Node" parent="PlayerShip/StateMachine" unique_id=241064456 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
+script = ExtResource("9_2cgwh")
+normal_state = NodePath("../NormalState")
+ship = NodePath("../..")
+state_machine = NodePath("..")

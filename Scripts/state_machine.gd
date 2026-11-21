@@ -13,4 +13,6 @@ func update(delta: float):
 		current_state.update(delta)
 
 func change_state(new_state: State):
+	current_state.exit()
 	current_state = new_state
+	current_state.enter()
