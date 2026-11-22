@@ -1,26 +1,18 @@
 [gd_scene format=3 uid="uid://dsk7aaqe6o7w4"]
 
-[ext_resource type="Script" uid="uid://bcm7ycbo0202k" path="res://Scripts/new_ship.gd" id="1_i3aeo"]
-[ext_resource type="Script" uid="uid://ct1oeau4ft7y8" path="res://Scripts/player_controller.gd" id="2_5wyu1"]
-[ext_resource type="Script" uid="uid://07uyd3fkyngb" path="res://Scripts/flight_component.gd" id="3_5wyu1"]
-[ext_resource type="Script" uid="uid://cpogc18s1it0f" path="res://Scripts/weapon_component.gd" id="3_35xla"]
-[ext_resource type="Script" uid="uid://c5oqevo1uuldt" path="res://Scripts/state_machine.gd" id="5_5wyu1"]
-[ext_resource type="Script" uid="uid://bpr53p0icpt7g" path="res://Scripts/normal_state.gd" id="5_iaow0"]
-[ext_resource type="Script" uid="uid://7md8daph5lvt" path="res://Scripts/strafe_state.gd" id="6_qpfo2"]
-[ext_resource type="Script" uid="uid://bxrsayn1pb6q4" path="res://Scripts/boost_state.gd" id="8_0c07c"]
-[ext_resource type="Script" uid="uid://cvx34cff0q0" path="res://Scripts/dodge_state.gd" id="9_2cgwh"]
+[ext_resource type="PackedScene" uid="uid://c3ppu4y2uxxce" path="res://Scenes/player_ship.tscn" id="1_lc1oi"]
+[ext_resource type="Script" uid="uid://b7js66oxh2p4d" path="res://Scenes/test.gd" id="1_qc4db"]
+[ext_resource type="PackedScene" uid="uid://crlgsnoht1dod" path="res://Scenes/ai_ship.tscn" id="3_ys1qc"]
 
 [sub_resource type="Environment" id="Environment_ehkex"]
 background_mode = 1
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_xersf"]
-
-[sub_resource type="PrismMesh" id="PrismMesh_00tp4"]
-size = Vector3(1, 1, 0.2)
-
-[node name="Node3D" type="Node3D" unique_id=86045294]
+[node name="Node3D" type="Node3D" unique_id=86045294 node_paths=PackedStringArray("player", "ai_ship")]
+script = ExtResource("1_qc4db")
+player = NodePath("PlayerShip")
+ai_ship = NodePath("AIShip")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2001847513]
 environment = SubResource("Environment_ehkex")
@@ -30,61 +22,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1
 projection = 1
 size = 64.0
 
-[node name="PlayerShip" type="CharacterBody3D" parent="." unique_id=1460826047 node_paths=PackedStringArray("model", "controller", "flight_component", "state_machine")]
-script = ExtResource("1_i3aeo")
-model = NodePath("Model")
-controller = NodePath("PlayerController")
-flight_component = NodePath("FlightComponent")
-state_machine = NodePath("StateMachine")
+[node name="PlayerShip" parent="." unique_id=12943043 instance=ExtResource("1_lc1oi")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerShip" unique_id=817379542]
-shape = SubResource("SphereShape3D_xersf")
-
-[node name="Model" type="Node3D" parent="PlayerShip" unique_id=843374749]
-
-[node name="ShipMesh" type="MeshInstance3D" parent="PlayerShip/Model" unique_id=1115729375]
-transform = Transform3D(-1, -8.742278e-08, -3.821371e-15, 0, -4.371139e-08, 1, -8.742278e-08, 1, 4.371139e-08, 0, 0, 0.167)
-mesh = SubResource("PrismMesh_00tp4")
-
-[node name="PlayerController" type="Node" parent="PlayerShip" unique_id=1238525595]
-script = ExtResource("2_5wyu1")
-
-[node name="FlightComponent" type="Node" parent="PlayerShip" unique_id=1465686275 node_paths=PackedStringArray("ship")]
-script = ExtResource("3_5wyu1")
-ship = NodePath("..")
-
-[node name="WeaponComponent" type="Node" parent="PlayerShip" unique_id=191703811 node_paths=PackedStringArray("ship")]
-script = ExtResource("3_35xla")
-ship = NodePath("..")
-
-[node name="StateMachine" type="Node" parent="PlayerShip" unique_id=1746983336 node_paths=PackedStringArray("default_state")]
-script = ExtResource("5_5wyu1")
-default_state = NodePath("NormalState")
-
-[node name="NormalState" type="Node" parent="PlayerShip/StateMachine" unique_id=266910153 node_paths=PackedStringArray("strafe_state", "boost_state", "dodge_state", "ship", "state_machine")]
-script = ExtResource("5_iaow0")
-strafe_state = NodePath("../StrafeState")
-boost_state = NodePath("../BoostState")
-dodge_state = NodePath("../DodgeState")
-ship = NodePath("../..")
-state_machine = NodePath("..")
-
-[node name="StrafeState" type="Node" parent="PlayerShip/StateMachine" unique_id=2064424345 node_paths=PackedStringArray("normal_state", "dodge_state", "ship", "state_machine")]
-script = ExtResource("6_qpfo2")
-normal_state = NodePath("../NormalState")
-dodge_state = NodePath("../DodgeState")
-ship = NodePath("../..")
-state_machine = NodePath("..")
-metadata/_custom_type_script = "uid://bu7pc5v4x1ct8"
-
-[node name="BoostState" type="Node" parent="PlayerShip/StateMachine" unique_id=1131922217 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
-script = ExtResource("8_0c07c")
-normal_state = NodePath("../NormalState")
-ship = NodePath("../..")
-state_machine = NodePath("..")
-
-[node name="DodgeState" type="Node" parent="PlayerShip/StateMachine" unique_id=241064456 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
-script = ExtResource("9_2cgwh")
-normal_state = NodePath("../NormalState")
-ship = NodePath("../..")
-state_machine = NodePath("..")
+[node name="AIShip" parent="." unique_id=629851720 instance=ExtResource("3_ys1qc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.817642, 0, 0)

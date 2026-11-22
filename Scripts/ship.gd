@@ -1,14 +1,20 @@
 class_name Ship extends CharacterBody3D
 
 @export var model: Node3D
+@export var hardpoint: Node3D
 @export var controller: ShipController
 @export var flight_component: FlightComponent
 @export var state_machine: StateMachine
+@export var health: float = 3.0
 
 var _facing_yaw: float
 
 func _ready() -> void:
 	_facing_yaw = model.rotation.y
+
+func _process(delta: float) -> void:
+	if (health <= 0):
+		queue_free()
 
 func _physics_process(delta: float) -> void:
 	controller.update()

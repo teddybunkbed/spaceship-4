@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://crlgsnoht1dod"]
+
+[ext_resource type="Script" uid="uid://bcm7ycbo0202k" path="res://Scripts/ship.gd" id="1_y4wem"]
+[ext_resource type="Script" uid="uid://b0bj3st0c47yk" path="res://ai_controller.gd" id="2_y4wem"]
+[ext_resource type="Script" uid="uid://07uyd3fkyngb" path="res://Scripts/flight_component.gd" id="3_fxlym"]
+[ext_resource type="Script" uid="uid://cpogc18s1it0f" path="res://Scripts/weapon_component.gd" id="4_wmlkg"]
+[ext_resource type="Script" uid="uid://c5oqevo1uuldt" path="res://Scripts/state_machine.gd" id="5_77xj5"]
+[ext_resource type="Script" uid="uid://bpr53p0icpt7g" path="res://Scripts/normal_state.gd" id="6_l0ob2"]
+[ext_resource type="Script" uid="uid://7md8daph5lvt" path="res://Scripts/strafe_state.gd" id="7_7xar5"]
+[ext_resource type="Script" uid="uid://bxrsayn1pb6q4" path="res://Scripts/boost_state.gd" id="8_vrkf7"]
+[ext_resource type="Script" uid="uid://cvx34cff0q0" path="res://Scripts/dodge_state.gd" id="9_jg25d"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xersf"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_00tp4"]
+size = Vector3(1, 1, 0.2)
+
+[node name="AIShip" type="CharacterBody3D" unique_id=12943043 node_paths=PackedStringArray("model", "hardpoint", "controller", "flight_component", "state_machine")]
+script = ExtResource("1_y4wem")
+model = NodePath("Model")
+hardpoint = NodePath("Model/Hardpoint")
+controller = NodePath("AIController")
+flight_component = NodePath("FlightComponent")
+state_machine = NodePath("StateMachine")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1065654382]
+shape = SubResource("SphereShape3D_xersf")
+
+[node name="Model" type="Node3D" parent="." unique_id=955785820]
+
+[node name="ShipMesh" type="MeshInstance3D" parent="Model" unique_id=345713412]
+transform = Transform3D(-1, -8.742278e-08, -3.821371e-15, 0, -4.371139e-08, 1, -8.742278e-08, 1, 4.371139e-08, 0, 0, 0.167)
+mesh = SubResource("PrismMesh_00tp4")
+
+[node name="Hardpoint" type="Node3D" parent="Model" unique_id=424870831]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.7)
+
+[node name="AIController" type="Node" parent="." unique_id=1720541016 node_paths=PackedStringArray("ship")]
+script = ExtResource("2_y4wem")
+ship = NodePath("..")
+
+[node name="FlightComponent" type="Node" parent="." unique_id=189277547 node_paths=PackedStringArray("ship")]
+script = ExtResource("3_fxlym")
+ship = NodePath("..")
+
+[node name="WeaponComponent" type="Node" parent="." unique_id=845706145 node_paths=PackedStringArray("ship")]
+script = ExtResource("4_wmlkg")
+ship = NodePath("..")
+
+[node name="StateMachine" type="Node" parent="." unique_id=738966970 node_paths=PackedStringArray("default_state")]
+script = ExtResource("5_77xj5")
+default_state = NodePath("NormalState")
+
+[node name="NormalState" type="Node" parent="StateMachine" unique_id=2051919260 node_paths=PackedStringArray("strafe_state", "boost_state", "dodge_state", "ship", "state_machine")]
+script = ExtResource("6_l0ob2")
+strafe_state = NodePath("../StrafeState")
+boost_state = NodePath("../BoostState")
+dodge_state = NodePath("../DodgeState")
+ship = NodePath("../..")
+state_machine = NodePath("..")
+
+[node name="StrafeState" type="Node" parent="StateMachine" unique_id=1904105526 node_paths=PackedStringArray("normal_state", "dodge_state", "ship", "state_machine")]
+script = ExtResource("7_7xar5")
+normal_state = NodePath("../NormalState")
+dodge_state = NodePath("../DodgeState")
+ship = NodePath("../..")
+state_machine = NodePath("..")
+metadata/_custom_type_script = "uid://bu7pc5v4x1ct8"
+
+[node name="BoostState" type="Node" parent="StateMachine" unique_id=497967363 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
+script = ExtResource("8_vrkf7")
+normal_state = NodePath("../NormalState")
+ship = NodePath("../..")
+state_machine = NodePath("..")
+
+[node name="DodgeState" type="Node" parent="StateMachine" unique_id=1472347343 node_paths=PackedStringArray("normal_state", "ship", "state_machine")]
+script = ExtResource("9_jg25d")
+normal_state = NodePath("../NormalState")
+ship = NodePath("../..")
+state_machine = NodePath("..")

@@ -16,7 +16,7 @@ func _physics_process(delta: float) -> void:
 
 func fire_projectile():
 	var projectile: Projectile = projectile_scene.instantiate()
-	projectile.position = ship.position
+	projectile.position = ship.hardpoint.global_position
 	projectile.rotation.y = ship.get_facing_yaw()
 	projectile.local_velocity = ship.velocity
 	get_tree().root.add_child(projectile)
