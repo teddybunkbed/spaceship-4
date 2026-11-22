@@ -2,12 +2,30 @@
 
 [ext_resource type="PackedScene" uid="uid://c3ppu4y2uxxce" path="res://Scenes/player_ship.tscn" id="1_lc1oi"]
 [ext_resource type="Script" uid="uid://b7js66oxh2p4d" path="res://Scenes/test.gd" id="1_qc4db"]
+[ext_resource type="Script" uid="uid://bk5xbsfl3ftx8" path="res://Scenes/cam.gd" id="2_35xla"]
 [ext_resource type="PackedScene" uid="uid://crlgsnoht1dod" path="res://Scenes/ai_ship.tscn" id="3_ys1qc"]
+[ext_resource type="Shader" uid="uid://dkgd37hlailao" path="res://Scenes/starfield.gdshader" id="4_ys1qc"]
 
 [sub_resource type="Environment" id="Environment_ehkex"]
 background_mode = 1
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_35xla"]
+size = Vector2(114, 64)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ys1qc"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_35xla"]
+noise = SubResource("FastNoiseLite_ys1qc")
+seamless = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i3aeo"]
+render_priority = 0
+shader = ExtResource("4_ys1qc")
+shader_parameter/noise = SubResource("NoiseTexture2D_35xla")
+shader_parameter/star_scale = 0.001
 
 [node name="Node3D" type="Node3D" unique_id=86045294 node_paths=PackedStringArray("player", "ai_ship")]
 script = ExtResource("1_qc4db")
@@ -17,10 +35,17 @@ ai_ship = NodePath("AIShip")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2001847513]
 environment = SubResource("Environment_ehkex")
 
-[node name="Camera3D" type="Camera3D" parent="." unique_id=646002692]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=646002692 node_paths=PackedStringArray("player")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1, 0)
 projection = 1
 size = 64.0
+script = ExtResource("2_35xla")
+player = NodePath("../PlayerShip")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D" unique_id=815695239]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 4.808253e-07, -11)
+mesh = SubResource("PlaneMesh_35xla")
+surface_material_override/0 = SubResource("ShaderMaterial_i3aeo")
 
 [node name="PlayerShip" parent="." unique_id=12943043 instance=ExtResource("1_lc1oi")]
 
